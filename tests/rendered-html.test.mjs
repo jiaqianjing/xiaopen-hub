@@ -18,4 +18,5 @@ test("production build contains the Xiaopen Lite console", async () => {
   assert.match(bundle, /模型服务/);
   assert.match(bundle, /API Key/);
   assert.match(bundle, /设备网关/);
+  assert.doesNotMatch(bundle, /Xiaozhi|小智/);
 });

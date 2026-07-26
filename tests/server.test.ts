@@ -137,7 +137,7 @@ test("raw Opus packets survive Ogg packaging", () => {
   assert.deepEqual(oggToOpusPackets(ogg), packets);
 });
 
-test("device gateway authenticates and answers the Xiaozhi hello handshake", async () => {
+test("device gateway authenticates and answers the XiaoPen hello handshake", async () => {
   const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
   const store = new ConfigStore(dataDir);
   await store.init();
@@ -147,11 +147,15 @@ test("device gateway authenticates and answers the Xiaozhi hello handshake", asy
   assert.ok(address && typeof address === "object");
   const token = await store.ensureDeviceToken();
   const unauthenticatedOta = await fetch(
-    `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
+    `http://127.0.0.1:${address.port}/xiaopen/ota/`,
   );
   assert.equal(unauthenticatedOta.status, 401);
-  const identifiedOta = await fetch(
+  const removedLegacyOta = await fetch(
     `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
+  );
+  assert.equal(removedLegacyOta.status, 404);
+  const identifiedOta = await fetch(
+    `http://127.0.0.1:${address.port}/xiaopen/ota/`,
     {
       headers: {
         "Device-Id": "30:ed:a0:c5:f7:64",
@@ -161,11 +165,11 @@ test("device gateway authenticates and answers the Xiaozhi hello handshake", asy
   );
   assert.equal(identifiedOta.status, 200);
   const authenticatedOta = await fetch(
-    `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
+    `http://127.0.0.1:${address.port}/xiaopen/ota/`,
     { headers: { Authorization: `Bearer ${token}` } },
   );
   assert.equal(authenticatedOta.status, 200);
-  const socket = new WebSocket(`ws://127.0.0.1:${address.port}/xiaozhi/v1/`, {
+  const socket = new WebSocket(`ws://127.0.0.1:${address.port}/xiaopen/v1/`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Device-Id": "test-s3",
@@ -259,7 +263,7 @@ test("door event runs local LLM and TTS routes then streams Opus to the device",
   const address = server.address();
   assert.ok(address && typeof address === "object");
   const token = await store.ensureDeviceToken();
-  const socket = new WebSocket(`ws://127.0.0.1:${address.port}/xiaozhi/v1/`, {
+  const socket = new WebSocket(`ws://127.0.0.1:${address.port}/xiaopen/v1/`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Device-Id": "door-speaker",

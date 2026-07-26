@@ -1,6 +1,6 @@
 # 小喷 Lite（XiaoPen Lite）
 
-> 轻量、本地优先的 Xiaozhi 模型控制台与 ESP32 设备网关。
+> 轻量、本地优先的小喷模型控制台与 ESP32 设备网关。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-b7f53f.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-17332d.svg)](https://nodejs.org/)
@@ -8,10 +8,19 @@
 
 小喷 Lite 用来管理家里的“小喷一号”：在一个本地网页中配置 LLM、ASR、
 TTS、视觉模型、API Key、角色 Prompt、任务路由和隐私边界，同时给
-ESP32-S3 提供兼容 Xiaozhi WebSocket v1 的语音网关。
+ESP32-S3 提供 XiaoPen Device Protocol v1 语音网关。
 
-它不是完整 Xiaozhi Server 的复刻。项目刻意保持轻量：不需要 Docker、
-数据库、Redis 或消息队列，一条命令即可在 Mac 或其他电脑上启动。
+它不是通用 AI Server 的复刻。项目刻意保持轻量：不需要 Docker、数据库、
+Redis 或消息队列，一条命令即可在 Mac 或其他电脑上启动。
+
+## 产品界面
+
+![小喷 Lite 本地模型控制台](docs/images/console-overview.jpg)
+
+![小喷一号设备管理页面](docs/images/device-admin.jpg)
+
+控制台只在 Mac 本机开放，设备管理页只允许当前局域网访问。两者都不依赖公网
+后台；模型、Prompt、设备 Token 与隐私策略由你自己保存和控制。
 
 ## 功能
 
@@ -39,9 +48,9 @@ ESP32-S3 提供兼容 Xiaozhi WebSocket v1 的语音网关。
 - 管理 API 只监听 `127.0.0.1`，不会暴露到局域网
 - 设备网关使用可轮换的 Bearer Token
 
-### Xiaozhi 设备网关
+### XiaoPen 设备网关
 
-- Xiaozhi WebSocket v1 鉴权和 `hello` 握手
+- XiaoPen Device Protocol v1 鉴权和 `hello` 握手
 - ESP32-S3 Opus 音频接收、简单 VAD、ASR、LLM、TTS 和 Opus 回传
 - 使用 `Device-Id` + `Client-Id` 完成首次 OTA/WebSocket 地址发现
 - 接受 Mac 人脸服务发布的 `dad` / `stranger` 结构化事件
@@ -54,7 +63,7 @@ flowchart LR
     CAM["ESP32-CAM<br/>只采集 JPEG"] -->|"局域网 /jpg"| VISION["Mac 人脸预测服务"]
     VISION -->|"dad / stranger 事件"| LITE["小喷 Lite<br/>Prompt + 模型路由"]
     MODELS["本地或云端模型<br/>ASR / LLM / TTS"] <--> LITE
-    LITE <-->|"Xiaozhi WebSocket<br/>Opus 音频"| S3["小喷一号<br/>ESP32-S3"]
+    LITE <-->|"XiaoPen Protocol v1<br/>Opus 音频"| S3["小喷一号<br/>ESP32-S3"]
 ```
 
 设计原则是“事件联动，而不是固件互相依赖”：
@@ -84,7 +93,7 @@ flowchart LR
 
 对应硬件固件独立维护：
 
-- 小喷一号 ESP32-S3 固件：暂未随本仓库公开发布
+- [小喷一号 ESP32-S3 固件](https://github.com/jiaqianjing/xiaopen-esp32)
 - [ESP32-CAM 采集固件](https://github.com/jiaqianjing/esp32-cam-learning)
 
 本仓库是本地控制面和设备网关，不包含上述两块板子的完整固件。
@@ -207,7 +216,7 @@ xiaopen-lite/
 ├── src/                 # React 本地控制台
 ├── server/
 │   ├── api.ts           # 仅本机可访问的管理 API
-│   ├── gateway.ts       # Xiaozhi WebSocket 与门口事件网关
+│   ├── gateway.ts       # XiaoPen 设备协议与门口事件网关
 │   ├── providers.ts     # LLM / ASR / TTS Provider 适配
 │   ├── store.ts         # 配置、加密密钥仓库和审计
 │   └── ogg.ts           # Ogg / Opus 封装与解析
@@ -230,7 +239,7 @@ npm audit
 - Provider 连接测试使用加密仓库中的凭据
 - 默认隐私策略阻止文字进入云端 LLM
 - 原始 Opus 帧与 Ogg 容器转换
-- Xiaozhi WebSocket Token 鉴权和 `hello` 握手
+- XiaoPen Device Protocol Token 鉴权和 `hello` 握手
 - 门口事件经过本地 LLM、TTS 并向设备回传 Opus
 - 前端生产构建包含完整控制台
 
@@ -239,7 +248,7 @@ npm audit
 - Vision 路由和管理界面已经预留；人脸训练与预测服务仍作为独立 Mac 服务运行。
 - 当前实现聚焦单家庭、单机控制面，不提供多租户和公网管理。
 - 设备网关使用局域网 HTTP/WebSocket；不要直接映射到公网。
-- 首次 OTA 发现依赖 Xiaozhi 固件提供的 `Device-Id` 和 `Client-Id`；它是局域网配对机制，不替代 TLS 或零信任网络。
+- 首次 OTA 发现依赖设备提供的 `Device-Id` 和 `Client-Id`；它是局域网配对机制，不替代 TLS 或零信任网络。
 - ESP32-S3 和 ESP32-CAM 的烧录、板级配置请查看各自固件仓库。
 
 ## 参与贡献
@@ -254,3 +263,7 @@ npm audit
 ## License
 
 [MIT](LICENSE) © 2026 jiaqianjing
+
+设备协议的消息结构和 ESP32 固件最初衍生自
+[78/xiaozhi-esp32](https://github.com/78/xiaozhi-esp32)。小喷项目独立运行，
+不依赖其官方服务器；上游版权与 MIT License 按许可要求保留。

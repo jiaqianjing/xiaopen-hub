@@ -1327,7 +1327,7 @@ function Gateway({
         <div>
           <p className="eyebrow">DEVICE GATEWAY</p>
           <h2>让小喷只连接这台 Mac。</h2>
-          <p>设备网关将兼容 Xiaozhi WebSocket 协议，并用独立 Token 鉴权。</p>
+          <p>设备网关使用 XiaoPen Device Protocol v1，并用独立 Token 鉴权。</p>
         </div>
       </section>
       <section className="gateway-grid">
@@ -1415,7 +1415,7 @@ function Gateway({
         <div className="roadmap-step done">
           <span>2</span>
           <div>
-            <strong>Xiaozhi WebSocket</strong>
+            <strong>XiaoPen Protocol</strong>
             <small>设备握手与 Opus 会话</small>
           </div>
         </div>
@@ -1423,8 +1423,8 @@ function Gateway({
         <div className="roadmap-step current">
           <span>3</span>
           <div>
-            <strong>小喷一号迁移</strong>
-            <small>验证后切换本地 OTA 地址</small>
+            <strong>小喷一号在线</strong>
+            <small>本地 OTA 发现与语音会话</small>
           </div>
         </div>
       </div>

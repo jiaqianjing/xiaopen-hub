@@ -28,6 +28,9 @@ interface DeviceSession {
   lastSeenAt: string;
 }
 
+const DEVICE_OTA_PATH = "/xiaopen/ota/";
+const DEVICE_WEBSOCKET_PATH = "/xiaopen/v1/";
+
 export interface GatewaySnapshot {
   running: boolean;
   startedAt: string;
@@ -70,7 +73,7 @@ export class DeviceGateway {
       const authorization = request.headers.authorization ?? "";
       const token = await this.store.ensureDeviceToken();
       if (
-        url.pathname !== "/xiaozhi/v1/" ||
+        url.pathname !== DEVICE_WEBSOCKET_PATH ||
         authorization.replace(/^Bearer\s+/i, "") !== token
       ) {
         socket.write("HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n");
@@ -121,7 +124,10 @@ export class DeviceGateway {
       this.sendJson(response, 200, this.snapshot());
       return;
     }
-    if (url.pathname === "/xiaozhi/ota/" || url.pathname === "/xiaozhi/ota") {
+    if (
+      url.pathname === DEVICE_OTA_PATH ||
+      url.pathname === DEVICE_OTA_PATH.slice(0, -1)
+    ) {
       const authorization = request.headers.authorization ?? "";
       const token = await this.store.ensureDeviceToken();
       const deviceId = String(request.headers["device-id"] ?? "");
@@ -141,7 +147,7 @@ export class DeviceGateway {
       const host = this.getLanAddress();
       this.sendJson(response, 200, {
         websocket: {
-          url: `ws://${host}:${this.port}/xiaozhi/v1/`,
+          url: `ws://${host}:${this.port}${DEVICE_WEBSOCKET_PATH}`,
           token,
           version: 1,
         },

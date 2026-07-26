@@ -1,7 +1,7 @@
 {
   "name": "xiaopen-lite",
   "version": "0.1.0",
-  "description": "Local-first model console and Xiaozhi device gateway for XiaoPen One",
+  "description": "Local-first model console and device gateway for XiaoPen One",
   "license": "MIT",
   "private": true,
   "homepage": "https://github.com/jiaqianjing/xiaopen-lite#readme",
