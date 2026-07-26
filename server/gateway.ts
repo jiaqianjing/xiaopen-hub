@@ -124,8 +124,18 @@ export class DeviceGateway {
     if (url.pathname === "/xiaozhi/ota/" || url.pathname === "/xiaozhi/ota") {
       const authorization = request.headers.authorization ?? "";
       const token = await this.store.ensureDeviceToken();
-      if (authorization.replace(/^Bearer\s+/i, "") !== token) {
-        this.sendJson(response, 401, { error: "设备 Token 无效" });
+      const deviceId = String(request.headers["device-id"] ?? "");
+      const clientId = String(request.headers["client-id"] ?? "");
+      const hasDeviceIdentity =
+        /^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$/i.test(deviceId) &&
+        clientId.length >= 8 &&
+        clientId.length <= 128;
+      const hasToken =
+        authorization.replace(/^Bearer\s+/i, "") === token;
+      if (!hasToken && !hasDeviceIdentity) {
+        this.sendJson(response, 401, {
+          error: "需要设备身份或有效 Token",
+        });
         return;
       }
       const host = this.getLanAddress();
@@ -443,6 +453,7 @@ export class DeviceGateway {
         type: "alert",
         status: "error",
         message,
+        emotion: "sad",
       }),
     );
     this.store

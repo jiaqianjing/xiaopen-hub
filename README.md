@@ -43,7 +43,7 @@ ESP32-S3 提供兼容 Xiaozhi WebSocket v1 的语音网关。
 
 - Xiaozhi WebSocket v1 鉴权和 `hello` 握手
 - ESP32-S3 Opus 音频接收、简单 VAD、ASR、LLM、TTS 和 Opus 回传
-- OTA/WebSocket 地址发现接口
+- 使用 `Device-Id` + `Client-Id` 完成首次 OTA/WebSocket 地址发现
 - 接受 Mac 人脸服务发布的 `dad` / `stranger` 结构化事件
 - 在控制台查看网关状态、连接设备和最近错误
 
@@ -127,7 +127,7 @@ npm run dev
 | --- | --- | --- |
 | `127.0.0.1:3000` | React 管理页面 | 仅本机 |
 | `127.0.0.1:8090` | 管理 API | 仅本机 |
-| `0.0.0.0:8091` | ESP32 设备网关 | 局域网，Token 鉴权 |
+| `0.0.0.0:8091` | ESP32 设备网关 | 局域网，设备身份发现 + Token 会话鉴权 |
 
 生产构建与启动：
 
@@ -239,6 +239,7 @@ npm audit
 - Vision 路由和管理界面已经预留；人脸训练与预测服务仍作为独立 Mac 服务运行。
 - 当前实现聚焦单家庭、单机控制面，不提供多租户和公网管理。
 - 设备网关使用局域网 HTTP/WebSocket；不要直接映射到公网。
+- 首次 OTA 发现依赖 Xiaozhi 固件提供的 `Device-Id` 和 `Client-Id`；它是局域网配对机制，不替代 TLS 或零信任网络。
 - ESP32-S3 和 ESP32-CAM 的烧录、板级配置请查看各自固件仓库。
 
 ## 参与贡献

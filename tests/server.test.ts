@@ -150,6 +150,16 @@ test("device gateway authenticates and answers the Xiaozhi hello handshake", asy
     `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
   );
   assert.equal(unauthenticatedOta.status, 401);
+  const identifiedOta = await fetch(
+    `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
+    {
+      headers: {
+        "Device-Id": "30:ed:a0:c5:f7:64",
+        "Client-Id": "test-device-client",
+      },
+    },
+  );
+  assert.equal(identifiedOta.status, 200);
   const authenticatedOta = await fetch(
     `http://127.0.0.1:${address.port}/xiaozhi/ota/`,
     { headers: { Authorization: `Bearer ${token}` } },
