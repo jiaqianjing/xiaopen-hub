@@ -1,0 +1,45 @@
+{
+  "name": "xiaopen-lite",
+  "version": "0.1.0",
+  "description": "Local-first model console and Xiaozhi device gateway for XiaoPen One",
+  "license": "MIT",
+  "private": true,
+  "homepage": "https://github.com/jiaqianjing/xiaopen-lite#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiaqianjing/xiaopen-lite.git"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "node scripts/run-local.mjs dev",
+    "dev:ui": "vite --host 127.0.0.1 --port 3000",
+    "dev:server": "tsx watch server/index.ts",
+    "build": "vite build",
+    "start": "node scripts/run-local.mjs start",
+    "start:ui": "vite preview --host 127.0.0.1 --port 3000",
+    "start:server": "tsx server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs && npm run test:server",
+    "test:server": "tsx --test tests/server.test.ts"
+  },
+  "dependencies": {
+    "lucide-react": "^1.27.0",
+    "opus-decoder": "^0.7.11",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "ws": "^8.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/ws": "^8.18.1",
+    "@vitejs/plugin-react": "6.0.2",
+    "tsx": "^4.23.1",
+    "typescript": "5.9.3",
+    "vite": "^8.1.5"
+  },
+  "type": "module"
+}
