@@ -48,7 +48,7 @@ export class ConfigStore {
     this.dataDir =
       dataDir ??
       process.env.XIAOPEN_DATA_DIR ??
-      join(homedir(), ".xiaopen-lite");
+      join(homedir(), ".xiaopen-hub");
     this.configPath = join(this.dataDir, "config.json");
     this.auditPath = join(this.dataDir, "audit.jsonl");
     this.keyPath = join(this.dataDir, "vault.key");

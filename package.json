@@ -1,13 +1,13 @@
 {
-  "name": "xiaopen-lite",
+  "name": "xiaopen-hub",
   "version": "0.1.0",
-  "description": "Local-first model console and device gateway for XiaoPen One",
+  "description": "Local-first model console and device gateway/hub for XiaoPen",
   "license": "MIT",
   "private": true,
-  "homepage": "https://github.com/jiaqianjing/xiaopen-lite#readme",
+  "homepage": "https://github.com/jiaqianjing/xiaopen-hub#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jiaqianjing/xiaopen-lite.git"
+    "url": "git+https://github.com/jiaqianjing/xiaopen-hub.git"
   },
   "engines": {
     "node": ">=22.13.0"

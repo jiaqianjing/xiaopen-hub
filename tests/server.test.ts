@@ -11,7 +11,7 @@ import { generateText, testProvider } from "../server/providers.js";
 import { ConfigStore } from "../server/store.js";
 
 test("provider API keys are encrypted and never returned in config", async () => {
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   try {
     const store = new ConfigStore(dataDir);
     await store.init();
@@ -41,7 +41,7 @@ test("provider API keys are encrypted and never returned in config", async () =>
 });
 
 test("deleting a provider clears route references and its secret", async () => {
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   try {
     const store = new ConfigStore(dataDir);
     await store.init();
@@ -83,7 +83,7 @@ test("provider connection test uses the encrypted API key", async () => {
   await new Promise<void>((resolve) => mock.listen(0, "127.0.0.1", resolve));
   const address = mock.address();
   assert.ok(address && typeof address === "object");
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   try {
     const store = new ConfigStore(dataDir);
     await store.init();
@@ -106,7 +106,7 @@ test("provider connection test uses the encrypted API key", async () => {
 });
 
 test("default privacy policy blocks text from reaching a cloud LLM", async () => {
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   try {
     const store = new ConfigStore(dataDir);
     await store.init();
@@ -138,7 +138,7 @@ test("raw Opus packets survive Ogg packaging", () => {
 });
 
 test("device gateway authenticates and answers the XiaoPen hello handshake", async () => {
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   const store = new ConfigStore(dataDir);
   await store.init();
   const gateway = new DeviceGateway(store, 0);
@@ -234,7 +234,7 @@ test("door event runs local LLM and TTS routes then streams Opus to the device",
   );
   const modelAddress = modelServer.address();
   assert.ok(modelAddress && typeof modelAddress === "object");
-  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-lite-"));
+  const dataDir = await mkdtemp(join(tmpdir(), "xiaopen-hub-"));
   const store = new ConfigStore(dataDir);
   await store.init();
   const llm = await store.saveProvider({

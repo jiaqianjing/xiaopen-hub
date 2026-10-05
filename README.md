@@ -1,21 +1,21 @@
-# 小喷 Lite（XiaoPen Lite）
+# 小喷 Hub（XiaoPen Hub）
 
-> 轻量、本地优先的小喷模型控制台与 ESP32 设备网关。
+> 轻量、本地优先的小喷模型控制台与 ESP32 设备网关中枢。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-b7f53f.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-17332d.svg)](https://nodejs.org/)
 [![Tests](https://img.shields.io/badge/tests-8%20passed-b7f53f.svg)](#测试)
 
-小喷 Lite 用来管理家里的“小喷一号”：在一个本地网页中配置 LLM、ASR、
+小喷 Hub 用来管理家里的“小喷一号”：在一个本地网页中配置 LLM、ASR、
 TTS、视觉模型、API Key、角色 Prompt、任务路由和隐私边界，同时给
-ESP32-S3 提供 XiaoPen Device Protocol v1 语音网关。
+ESP32-S3 端侧设备提供 XiaoPen Device Protocol v1 语音网关。
 
 它不是通用 AI Server 的复刻。项目刻意保持轻量：不需要 Docker、数据库、
 Redis 或消息队列，一条命令即可在 Mac 或其他电脑上启动。
 
 ## 产品界面
 
-![小喷 Lite 本地模型控制台](docs/images/console-overview.jpg)
+![小喷 Hub 本地模型控制台](docs/images/console-overview.jpg)
 
 ![小喷一号设备管理页面](docs/images/device-admin.jpg)
 
@@ -61,17 +61,17 @@ Redis 或消息队列，一条命令即可在 Mac 或其他电脑上启动。
 ```mermaid
 flowchart LR
     CAM["ESP32-CAM<br/>只采集 JPEG"] -->|"局域网 /jpg"| VISION["Mac 人脸预测服务"]
-    VISION -->|"dad / stranger 事件"| LITE["小喷 Lite<br/>Prompt + 模型路由"]
-    MODELS["本地或云端模型<br/>ASR / LLM / TTS"] <--> LITE
-    LITE <-->|"XiaoPen Protocol v1<br/>Opus 音频"| S3["小喷一号<br/>ESP32-S3"]
+    VISION -->|"dad / stranger 事件"| HUB["小喷 Hub<br/>Prompt + 模型路由"]
+    MODELS["本地或云端模型<br/>ASR / LLM / TTS"] <--> HUB
+    HUB <-->|"XiaoPen Protocol v1<br/>Opus 音频"| S3["小喷一号 (端侧)<br/>ESP32-S3"]
 ```
 
 设计原则是“事件联动，而不是固件互相依赖”：
 
 - ESP32-CAM 只负责稳定采集图片
 - Mac 负责人脸样本、训练、识别和隐私策略
-- 小喷 Lite 负责模型、Prompt、语音链路和事件编排
-- ESP32-S3 负责唤醒、录音、全屏颜文字和语音播报
+- 小喷 Hub 负责模型、Prompt、语音链路和事件编排
+- ESP32-S3 端侧负责唤醒、录音、全屏颜文字和语音播报
 
 因此更换摄像头、人脸模型、语音模型或 S3 硬件时，不需要重写其他模块。
 
@@ -93,10 +93,11 @@ flowchart LR
 
 对应硬件固件独立维护：
 
-- [小喷一号 ESP32-S3 固件](https://github.com/jiaqianjing/xiaopen-esp32)
+- [小喷一号 ESP32-S3 端侧固件 (xiaopen-device)](https://github.com/jiaqianjing/xiaopen-device)
 - [ESP32-CAM 采集固件](https://github.com/jiaqianjing/esp32-cam-learning)
+- [ESP32 连接原理与故障排查指南](docs/device-networking.md)（含云端小智 vs 本地网关演进说明、OTA 握手与 WebSocket 原理、IP 漂移解决方案）
 
-本仓库是本地控制面和设备网关，不包含上述两块板子的完整固件。
+本仓库是本地控制面和设备网关中枢（Hub），不包含上述两块板子的完整端侧固件。
 
 ### ESP32-CAM 使用 USB-TTL 烧录
 
@@ -122,8 +123,8 @@ ESP32-CAM IO0 -> GND（仅刷写时连接）
 ### 安装与运行
 
 ```bash
-git clone https://github.com/jiaqianjing/xiaopen-lite.git
-cd xiaopen-lite
+git clone https://github.com/jiaqianjing/xiaopen-hub.git
+cd xiaopen-hub
 npm install
 npm run dev
 ```
@@ -191,7 +192,7 @@ Opus 音频发送给小喷。主动播报要求小喷当前已连接设备网关
 
 ## 数据与密钥
 
-默认数据目录是 `~/.xiaopen-lite`：
+默认数据目录是 `~/.xiaopen-hub`（兼容已有的 `~/.xiaopen-lite`）：
 
 | 文件 | 内容 | 权限 |
 | --- | --- | --- |
@@ -212,7 +213,7 @@ XIAOPEN_DATA_DIR=/自定义/数据目录 npm start
 ## 项目结构
 
 ```text
-xiaopen-lite/
+xiaopen-hub/
 ├── src/                 # React 本地控制台
 ├── server/
 │   ├── api.ts           # 仅本机可访问的管理 API

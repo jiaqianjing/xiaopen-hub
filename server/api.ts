@@ -72,7 +72,7 @@ export async function startAdminApi(
       if (request.method === "GET" && url.pathname === "/api/health") {
         sendJson(response, 200, {
           ok: true,
-          service: "xiaopen-lite",
+          service: "xiaopen-hub",
           version: "0.1.0",
           dataDir: store.dataDir,
           time: new Date().toISOString(),

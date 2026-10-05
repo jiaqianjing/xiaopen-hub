@@ -68,7 +68,7 @@ export function opusPacketsToOgg(
   head.writeInt16LE(0, 16);
   head[18] = 0;
 
-  const vendor = Buffer.from("xiaopen-lite", "utf8");
+  const vendor = Buffer.from("xiaopen-hub", "utf8");
   const tags = Buffer.alloc(8 + 4 + vendor.length + 4);
   tags.write("OpusTags", 0, "ascii");
   tags.writeUInt32LE(vendor.length, 8);

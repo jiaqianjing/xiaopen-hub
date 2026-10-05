@@ -3,12 +3,12 @@ import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
 
-test("production build contains the Xiaopen Lite console", async () => {
+test("production build contains the Xiaopen Hub console", async () => {
   const html = await readFile(
     new URL("../dist/index.html", import.meta.url),
     "utf8",
   );
-  assert.match(html, /<title>小喷 Lite · 本地模型控制台<\/title>/i);
+  assert.match(html, /<title>小喷 Hub · 本地模型控制台<\/title>/i);
   assert.doesNotMatch(html, /vinext|cloudflare|Your site is taking shape/i);
 
   const assetsDir = new URL("../dist/assets/", import.meta.url);

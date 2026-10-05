@@ -474,7 +474,7 @@ export default function HomePage() {
         <div className="brand">
           <div className="brand-mark">XP</div>
           <div>
-            <strong>小喷 Lite</strong>
+            <strong>小喷 Hub</strong>
             <span>LOCAL CONSOLE</span>
           </div>
         </div>
@@ -542,7 +542,7 @@ export default function HomePage() {
               <WifiOff size={18} />
               <div>
                 <strong>本地服务未启动</strong>
-                <span>请启动 Xiaopen Lite 服务端后刷新页面。</span>
+                <span>请启动 XiaoPen Hub 服务端后刷新页面。</span>
               </div>
             </div>
           ) : null}

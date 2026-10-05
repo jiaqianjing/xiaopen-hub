@@ -11,7 +11,7 @@ await gateway.start();
 await startAdminApi(store, gateway, config.gateway.adminPort);
 
 console.log(
-  `Xiaopen Lite admin API: http://127.0.0.1:${config.gateway.adminPort}`,
+  `XiaoPen Hub admin API: http://127.0.0.1:${config.gateway.adminPort}`,
 );
-console.log(`XiaoPen device gateway: 0.0.0.0:${config.gateway.devicePort}`);
+console.log(`XiaoPen Hub device gateway: 0.0.0.0:${config.gateway.devicePort}`);
 console.log(`Encrypted data store: ${store.dataDir}`);
